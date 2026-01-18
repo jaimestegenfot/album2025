@@ -4,6 +4,9 @@ import { useState } from "react";
 import PhotoGallery from "@/components/PhotoGallery";
 import VideoGallery from "@/components/VideoGallery";
 import FallingHearts from "@/components/FallingHearts";
+import RomanticMessages from "@/components/RomanticMessages";
+import CustomCursor from "@/components/CustomCursor";
+import ClickParticles from "@/components/ClickParticles";
 
 // Datos de ejemplo - reemplaza con tus propias fotos y videos
 const examplePhotos = [
@@ -61,8 +64,11 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-pink-50 via-white to-pink-50 relative overflow-hidden">
-      {/* Corazones cayendo como nieve */}
+      {/* Efectos especiales */}
+      <CustomCursor />
       <FallingHearts />
+      <RomanticMessages />
+      <ClickParticles />
       
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden z-10">
@@ -150,10 +156,14 @@ export default function Home() {
       {/* Galerías */}
       <div className="scroll-smooth relative z-10">
         {(activeSection === "all" || activeSection === "fotos") && (
-          <PhotoGallery photos={examplePhotos} title="Nuestras Fotos" />
+          <div className="animate-fade-in-up">
+            <PhotoGallery photos={examplePhotos} title="Nuestras Fotos" />
+          </div>
         )}
         {(activeSection === "all" || activeSection === "videos") && (
-          <VideoGallery videos={exampleVideos} title="Nuestros Videos" />
+          <div className="animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+            <VideoGallery videos={exampleVideos} title="Nuestros Videos" />
+          </div>
         )}
       </div>
 

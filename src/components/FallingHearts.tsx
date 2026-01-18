@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 
 interface Heart {
   id: number;
@@ -10,57 +10,67 @@ interface Heart {
   size: number;
   emoji: string;
   opacity: number;
+  startTime: number;
 }
 
 const heartEmojis = ["❤️", "💕", "💖", "💗", "💓", "💝", "💞", "💟", "❣️"];
 
 export default function FallingHearts() {
   const [hearts, setHearts] = useState<Heart[]>([]);
+  const maxHearts = useRef(15); // Limitar cantidad máxima de corazones
+  const heartIdCounter = useRef(0);
+
+  const createHeart = useCallback((): Heart => {
+    heartIdCounter.current += 1;
+    return {
+      id: heartIdCounter.current,
+      left: Math.random() * 100,
+      delay: Math.random() * 3,
+      duration: 12 + Math.random() * 8, // Entre 12 y 20 segundos
+      size: 20 + Math.random() * 25, // Entre 20px y 45px
+      emoji: heartEmojis[Math.floor(Math.random() * heartEmojis.length)],
+      opacity: 0.5 + Math.random() * 0.4, // Entre 0.5 y 0.9
+      startTime: Date.now(),
+    };
+  }, []);
 
   useEffect(() => {
-    // Crear corazones iniciales
-    const initialHearts: Heart[] = Array.from({ length: 25 }, (_, i) => ({
-      id: i,
-      left: Math.random() * 100,
-      delay: Math.random() * 5,
-      duration: 10 + Math.random() * 6, // Entre 10 y 16 segundos
-      size: 18 + Math.random() * 32, // Entre 18px y 50px
-      emoji: heartEmojis[Math.floor(Math.random() * heartEmojis.length)],
-      opacity: 0.6 + Math.random() * 0.4, // Entre 0.6 y 1.0
-    }));
-
+    // Crear corazones iniciales (menos cantidad)
+    const initialHearts: Heart[] = Array.from({ length: 12 }, () => createHeart());
     setHearts(initialHearts);
 
     // Agregar nuevos corazones periódicamente
     const interval = setInterval(() => {
-      const newHeart: Heart = {
-        id: Date.now() + Math.random(),
-        left: Math.random() * 100,
-        delay: 0,
-        duration: 10 + Math.random() * 6,
-        size: 18 + Math.random() * 32,
-        emoji: heartEmojis[Math.floor(Math.random() * heartEmojis.length)],
-        opacity: 0.6 + Math.random() * 0.4,
-      };
-      setHearts((prev) => [...prev, newHeart]);
-    }, 1500); // Nuevo corazón cada 1.5 segundos
+      setHearts((prev) => {
+        // Limitar la cantidad máxima
+        if (prev.length >= maxHearts.current) {
+          // Remover el más antiguo si hay demasiados
+          return [...prev.slice(1), createHeart()];
+        }
+        return [...prev, createHeart()];
+      });
+    }, 2000); // Nuevo corazón cada 2 segundos
 
-    // Limpiar corazones antiguos
+    // Limpiar corazones que ya terminaron su animación
     const cleanup = setInterval(() => {
-      setHearts((prev) => prev.filter((heart) => {
-        if (typeof heart.id === 'number' && heart.id < 1000) return true; // Mantener los iniciales
-        return heart.id > Date.now() - 20000;
-      }));
-    }, 5000);
+      const now = Date.now();
+      setHearts((prev) => {
+        return prev.filter((heart) => {
+          const elapsed = (now - heart.startTime) / 1000;
+          // Mantener corazones que aún están en animación (con margen de seguridad)
+          return elapsed < heart.duration + 2;
+        });
+      });
+    }, 3000);
 
     return () => {
       clearInterval(interval);
       clearInterval(cleanup);
     };
-  }, []);
+  }, [createHeart]);
 
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0" style={{ willChange: 'contents' }}>
       {hearts.map((heart) => (
         <div
           key={heart.id}
@@ -71,7 +81,9 @@ export default function FallingHearts() {
             animationDuration: `${heart.duration}s`,
             fontSize: `${heart.size}px`,
             opacity: heart.opacity,
-            filter: 'drop-shadow(0 0 4px rgba(236, 72, 153, 0.5))',
+            willChange: 'transform, opacity',
+            transform: 'translateZ(0)', // Aceleración por GPU
+            backfaceVisibility: 'hidden', // Optimización de renderizado
           }}
         >
           {heart.emoji}

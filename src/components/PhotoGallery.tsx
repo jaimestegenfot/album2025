@@ -32,10 +32,11 @@ export default function PhotoGallery({ photos, title = "Nuestras Fotos" }: Photo
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {photos.map((photo) => (
+          {photos.map((photo, index) => (
             <div
               key={photo.id}
-              className="group relative aspect-square overflow-hidden rounded-2xl cursor-pointer transform transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-pink-500/50 border-2 border-transparent hover:border-pink-300"
+              className="group relative aspect-square overflow-hidden rounded-2xl cursor-pointer transform transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-pink-500/50 border-2 border-transparent hover:border-pink-300 photo-glow animate-fade-in-up"
+              style={{ animationDelay: `${index * 0.1}s` }}
               onClick={() => setSelectedPhoto(photo)}
             >
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
@@ -54,8 +55,10 @@ export default function PhotoGallery({ photos, title = "Nuestras Fotos" }: Photo
                 className="object-cover transition-transform duration-500 group-hover:scale-110"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
               />
-              <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
-                <span className="text-2xl">❤️</span>
+              {/* Efecto de luz/brillo */}
+              <div className="absolute inset-0 bg-gradient-to-br from-pink-400/0 via-transparent to-red-400/0 group-hover:from-pink-400/20 group-hover:to-red-400/20 transition-all duration-500 z-10" />
+              <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 transform group-hover:scale-125 group-hover:rotate-12">
+                <span className="text-2xl drop-shadow-lg">❤️</span>
               </div>
             </div>
           ))}
