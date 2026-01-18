@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Nuestro Album 2025 ❤️",
+  title: "Nuestro Album 2026 ❤️",
   description: "Un lugar especial para nuestros recuerdos juntos",
 };
 
