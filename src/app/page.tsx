@@ -10,7 +10,7 @@ const examplePhotos = [
     id: 1,
     src: "/fotos/foto1.jpeg",
     alt: "Foto 1",
-    date: "Enero 2025",
+    date: "Enero 2026",
   },
   {
     id: 2,
@@ -34,24 +34,24 @@ const examplePhotos = [
     id: 5,
     src: "/fotos/foto5.jpeg",
     alt: "Foto 5",
-    date: "Marzo 2025",
+    date: "Enero 2026",
   },
 ];
 
 const exampleVideos = [
   {
     id: 1,
-    src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-    thumbnail: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800&q=80",
+    src: "/videos/video1.mp4",
+    thumbnail: "/fotos/video1.jpeg",
     title: "Nuestro Primer Video",
-    date: "Enero 2025",
+    date: "Enero 2026",
   },
   {
     id: 2,
-    src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-    thumbnail: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=80",
+    src: "/videos/video2.mp4",
+    thumbnail: "/fotos/video2.jpeg",
     title: "Aventuras Juntos",
-    date: "Febrero 2025",
+    date: "Enero 2026",
   },
 ];
 
